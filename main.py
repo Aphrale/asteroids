@@ -31,6 +31,8 @@ def main():
         for drawable in drawable_grp:
             drawable.draw(screen)
         updatable_grp.update(dt)
+        for asteroid in asteroid_grp:
+            
         pygame.display.flip()
 
 
