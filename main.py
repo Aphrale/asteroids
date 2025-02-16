@@ -25,23 +25,35 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     
-    while True:
+    running = True
+    while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return
-        
+                running = False
+                break
+    
         dt = clock.tick(60) / 1000
+    
+        updatable_grp.update(dt)
+    
+    # Bullet-asteroid collisions
+        for asteroid in asteroid_grp:
+            for shot in shot_grp:
+                if asteroid.collision(shot):
+                    asteroid.kill()
+                    shot.kill()
+    
+    # Player-asteroid collision using sprite groups
+        if pygame.sprite.spritecollideany(player, asteroid_grp):
+            print("Game Over")
+            pygame.quit()
+            sys.exit()
+    
         pygame.Surface.fill(screen, (0,0,0))
         for drawable in drawable_grp:
             drawable.draw(screen)
-        updatable_grp.update(dt)
-        for asteroid in asteroid_grp:
-            if asteroid.collision(player):
-                print("Game Over")
-                sys.exit()
-
+    
         pygame.display.flip()
-
 
 
 if __name__ == "__main__":
